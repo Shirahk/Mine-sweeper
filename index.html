@@ -11,10 +11,15 @@
 
 <body onload="initGame()">
     <h1>Mine sweeper</h1>
-    <button onclick="startGame()">Start</button>
+    <button onclick="pauseGame(this)">&#128512;</button>
+    <button onclick="pauseGame(this)">Beginner</button>
+    <button onclick="pauseGame(this)">Medium</button>
+    <button onclick="pauseGame(this)">Expert</button>
+
     <table border="1" cellpadding="30">
         <tbody class="board"></tbody>
     </table>
+    <h2>Shira Hakmon</h2>
     <script src="js/util.js"></script>
     <script src="js/main.js"></script>
 </body>

@@ -1,12 +1,19 @@
 
+h1 {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif ;
+    }
+    
+h2 {
+    font-family: cursive;
+}
+    
 .board td {
-    width: 30px;
-    height: 30px;
-    text-align: center;
-    transition: 0.5s;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        transition: 0.5s;
 }
-
+    
 .board td:hover {
-    background-color: aquamarine;
+        background-color: lightsalmon;
 }
-
