@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Mine sweeper</title>
+</head>
+
+<body onload="initGame()">
+    <h1>Mine sweeper</h1>
+    <div>
+        <button onclick="setBoard(4, 2)">Beginner</button>
+        <button onclick="setBoard(8, 14)">Medium</button>
+        <button onclick="setBoard(12, 32)">Expert</button>
+    </div>
+    <br>
+    <button class="smiley" onclick="startGame()">&#128512;</button>
+    Time: <span class="time"></span>
+
+    <table class="center" border="1" cellpadding="5">
+        <tbody class="board"></tbody>
+    </table>
+    <h2>Shira Hakmon</h2>
+    <script src="js/util.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

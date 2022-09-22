@@ -1,0 +1,45 @@
+body {
+    text-align : center;
+    margin-top: 50px;
+    background-color: rgb(136, 35, 35);
+}
+
+h1 {
+    font-family: cursive; 
+}
+    
+h2 {
+    font-family: cursive;
+    margin-top: 200px;
+}
+  
+.center {
+    margin: auto;
+    padding: 10px;
+    margin-top: 100px;
+}
+
+.board td {
+    width: 30px;
+    height: 30px;
+    background-color: whitesmoke;
+    text-align: center;
+    transition: 0.5s;
+}
+    
+.board td:hover {
+    background-color: lightgray;
+}
+
+td.taken {
+    background-color: grey;
+}
+
+.button {
+    padding: 10px;
+}
+
+div button {
+    border-radius: 20px;
+    padding: 10px;
+}
