@@ -29,23 +29,17 @@ var gGame = {
     secsPassed: 0
 };
 
-function getRandomIntInclusive(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
 function initGame() {
     document.addEventListener('contextmenu', event => event.preventDefault());
     startGame();
     setInterval(() => {
         if (gGame.isOn) {
             gGame.secsPassed++;
-            document.querySelector('.time').innerText = gGame.secsPassed;
+            var elTime = document.querySelector('.time')
+            elTime.innerText = gGame.secsPassed;
         }
     }, 1000);
 }
-
 function setBoard(size, mines) {
     gLevel.SIZE = size;
     gLevel.MINES = mines;
@@ -57,13 +51,15 @@ function startGame() {
     setMinesNegsCount(gBoard);
     renderBoard(gBoard);
     
-    document.querySelector('.smiley').innerText = HAPPY_SMILEY;
+    var elSmiley = document.querySelector('.smiley')
+    elSmiley.innerText = HAPPY_SMILEY;
 
     gGame.isOn = true;
     gGame.shownCount = 0;
     gGame.markedCount = 0;
     gGame.secsPassed = 0;
-    document.querySelector('.time').innerText = gGame.secsPassed;
+    var elTime = document.querySelector('.time')
+    elTime.innerText = gGame.secsPassed;
 }
 
 function buildBoard() {
@@ -74,7 +70,6 @@ function buildBoard() {
             board[i][j] = { ...cell };
         }
     }
-
     var mines = [];
     for (var i = 0; i < gLevel.MINES; i++) {
         var currRandom = getRandomIntInclusive(0, gLevel.SIZE * gLevel.SIZE - 1);
@@ -109,6 +104,10 @@ function setMinesNegsCount(board) {
     for (var i = 0; i < gLevel.SIZE; i++) {
         for (var j = 0; j < gLevel.SIZE; j++) {
             board[i][j].minesAroundCount = countNegs(i, j, board);
+            if (board[i][j].minesAroundCount < 1) {
+                board[i][j].minesAroundCount = ' ';
+            }
+
         }
     }
 }
