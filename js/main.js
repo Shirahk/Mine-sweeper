@@ -140,7 +140,6 @@ function cellMarked(elCell) {
             }
             elCell.innerText = showCell(gBoard[i][j]);
         }
-
         checkGameOver();
     }
 }
@@ -194,7 +193,7 @@ function expandShown(board, elCell, i, j) {
 }
 
 function checkGameOver() {
-    if (gGame.shownCount + gGame.markedCount === gLevel.SIZE * gLevel.SIZE) {
+    if (gLevel.MINES === gGame.markedCount && gGame.shownCount + gGame.markedCount === gLevel.SIZE * gLevel.SIZE) {
         gameOver();
         var elSymbol = document.querySelector('.smiley');
         elSymbol.innerText = WIN_SMILEY;
