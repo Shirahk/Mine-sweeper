@@ -19,8 +19,9 @@ h2 {
   
 .center {
     margin: auto;
-    padding: 10px;
-    margin-top: 50px;
+    margin-top: 40px;
+    border: solid 7px lightgray;
+    padding: 3px;
 }
 
 .board td {
@@ -50,14 +51,21 @@ td.taken {
 
 div button {
     border-radius: 20px;
-    padding: 15px;
+    padding: 10px;
     background-color: rgb(175, 20, 20);
-    font-size: 3opx;
     font-family: cursive;
+    font-size: 25px;
     border: solid 5px;
 }
 
 .smiley{
-    width: 60px;
-    height: 50px; 
+    font-size: 50px;
+}
+
+.box {
+    width: 80px;
+    font-size: 45px;
+    color: white;
+    border: solid 5px black;
+    margin: auto;
 }

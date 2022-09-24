@@ -51,8 +51,8 @@ function startGame() {
     setMinesNegsCount(gBoard);
     renderBoard(gBoard);
     
-    var elSmiley = document.querySelector('.smiley')
-    elSmiley.innerText = HAPPY_SMILEY;
+    var elSymbol = document.querySelector('.smiley')
+    elSymbol.innerText = HAPPY_SMILEY;
 
     gGame.isOn = true;
     gGame.shownCount = 0;
@@ -104,9 +104,9 @@ function setMinesNegsCount(board) {
     for (var i = 0; i < gLevel.SIZE; i++) {
         for (var j = 0; j < gLevel.SIZE; j++) {
             board[i][j].minesAroundCount = countNegs(i, j, board);
-            if (board[i][j].minesAroundCount < 1) {
-                board[i][j].minesAroundCount = ' ';
-            }
+            //if (board[i][j].minesAroundCount < 1) {
+              //  board[i][j] = ' ';
+            //}
 
         }
     }
@@ -149,7 +149,7 @@ function cellClicked(elCell, i, j) {
     if (gGame.isOn && !gBoard[i][j].isShown && !gBoard[i][j].isMarked) {
         gBoard[i][j].isShown = true;
         elCell.innerText = showCell(gBoard[i][j]);
-        elCell.style.backgroundColor = 'grey';
+        elCell.style.backgroundColor = 'lightslategrey';
         gGame.shownCount++;
         if (gBoard[i][j].isMine) {
             for (var i = 0; i < gLevel.SIZE; i++) {
@@ -163,7 +163,8 @@ function cellClicked(elCell, i, j) {
             }
 
             gameOver();
-            document.querySelector('.smiley').innerText = LOSE_SMILEY;
+            var elSymbol = document.querySelector('.smiley')
+            elSymbol.innerText = LOSE_SMILEY;
         } else {
             expandShown(gBoard, elCell, i, j);
             checkGameOver();
@@ -181,7 +182,7 @@ function expandShown(board, elCell, i, j) {
                 if (!board[cellI][cellJ].isShown && !board[cellI][cellJ].isMine) {
                     board[cellI][cellJ].isShown = true;
                     // elCell.innerText = showCell(board[cellI][cellJ]);
-                    // elCell.style.background = 'gray';
+                    // elCell.style.background = 'lightslategrey';
                     renderBoard(board);
                     gGame.shownCount++;
 
@@ -195,7 +196,8 @@ function expandShown(board, elCell, i, j) {
 function checkGameOver() {
     if (gGame.shownCount + gGame.markedCount === gLevel.SIZE * gLevel.SIZE) {
         gameOver();
-        document.querySelector('.smiley').innerText = WIN_SMILEY;
+        var elSymbol = document.querySelector('.smiley');
+        elSymbol.innerText = WIN_SMILEY;
     }
 }
 
