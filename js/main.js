@@ -119,7 +119,7 @@ function gameOver() {
 function showCell(cell) {
     var currCell = EMPTY;
     if (cell.isShown) {
-        var currCell = cell.minesAroundCount;
+        if (cell.minesAroundCount !== 0) currCell = cell.minesAroundCount;
         if (cell.isMine) currCell = MINE;
     } else if (cell.isMarked) {
         currCell = FLAG;
