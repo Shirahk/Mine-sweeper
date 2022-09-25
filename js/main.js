@@ -28,14 +28,15 @@ var gGame = {
     markedCount: 0,
     secsPassed: 0
 };
+var isClick = false;
 
 function initGame() {
     document.addEventListener('contextmenu', event => event.preventDefault());
     startGame();
     setInterval(() => {
-        if (gGame.isOn) {
+        if (gGame.isOn && isClick) {
             gGame.secsPassed++;
-            var elTime = document.querySelector('.time')
+            var elTime = document.querySelector('.time');
             elTime.innerText = gGame.secsPassed;
         }
     }, 1000);
@@ -47,10 +48,9 @@ function setBoard(size, mines) {
 }
 
 function startGame() {
-    gBoard = buildBoard();
-    setMinesNegsCount(gBoard);
+    gBoard = buildEmptyBoard();
     renderBoard(gBoard);
-    
+
     var elSymbol = document.querySelector('.smiley')
     elSymbol.innerText = HAPPY_SMILEY;
 
@@ -58,11 +58,12 @@ function startGame() {
     gGame.shownCount = 0;
     gGame.markedCount = 0;
     gGame.secsPassed = 0;
+    isClick = false;
     var elTime = document.querySelector('.time')
     elTime.innerText = gGame.secsPassed;
 }
 
-function buildBoard() {
+function buildEmptyBoard() {
     var board = [];
     for (var i = 0; i < gLevel.SIZE; i++) {
         board.push([]);
@@ -70,24 +71,29 @@ function buildBoard() {
             board[i][j] = { ...cell };
         }
     }
-    var mines = [];
-    for (var i = 0; i < gLevel.MINES; i++) {
-        var currRandom = getRandomIntInclusive(0, gLevel.SIZE * gLevel.SIZE - 1);
-        while (mines.includes(currRandom)) {
-            currRandom = getRandomIntInclusive(0, gLevel.SIZE * gLevel.SIZE - 1);
-        }
-        mines.push(currRandom);
-    }
-    for (var i = 0; i < gLevel.MINES; i++) {
-        var cellI = Math.floor(mines[i] / gLevel.SIZE);
-        var cellJ = mines[i] % gLevel.SIZE;
-        board[cellI][cellJ].isMine = true;
-    }
-
     return board;
 }
 
-function countNegs(cellI, cellJ, board) {
+function buildFinalBoard(board, cellI, cellJ) {
+    if (isClick) {
+        var mines = [];
+        for (var i = 0; i < gLevel.MINES; i++) {
+            var currRandom = getRandomIntInclusive(0, gLevel.SIZE * gLevel.SIZE - 1);
+            while (mines.includes(currRandom) && currRandom !== cellI * gLevel.SIZE + cellJ) {
+                currRandom = getRandomIntInclusive(0, gLevel.SIZE * gLevel.SIZE - 1);
+            }
+            mines.push(currRandom);
+        }
+        for (var i = 0; i < gLevel.MINES; i++) {
+            var currI = Math.floor(mines[i] / gLevel.SIZE);
+            var currJ = mines[i] % gLevel.SIZE;
+            board[currI][currJ].isMine = true;
+        }
+        setMinesNegsCount(board);
+    }
+}
+
+function countNegs(board, cellI, cellJ) {
     var negsCount = 0;
     for (var i = cellI - 1; i <= cellI + 1; i++) {
         if (i < 0 || i >= board.length) continue;
@@ -103,11 +109,7 @@ function countNegs(cellI, cellJ, board) {
 function setMinesNegsCount(board) {
     for (var i = 0; i < gLevel.SIZE; i++) {
         for (var j = 0; j < gLevel.SIZE; j++) {
-            board[i][j].minesAroundCount = countNegs(i, j, board);
-            //if (board[i][j].minesAroundCount < 1) {
-              //  board[i][j] = ' ';
-            //}
-
+            board[i][j].minesAroundCount = countNegs(board, i, j);
         }
     }
 }
@@ -140,33 +142,40 @@ function cellMarked(elCell) {
             }
             elCell.innerText = showCell(gBoard[i][j]);
         }
+
         checkGameOver();
     }
 }
 
 function cellClicked(elCell, i, j) {
-    if (gGame.isOn && !gBoard[i][j].isShown && !gBoard[i][j].isMarked) {
-        gBoard[i][j].isShown = true;
-        elCell.innerText = showCell(gBoard[i][j]);
-        elCell.style.backgroundColor = 'lightslategrey';
-        gGame.shownCount++;
-        if (gBoard[i][j].isMine) {
-            for (var i = 0; i < gLevel.SIZE; i++) {
-                for (var j = 0; j < gLevel.SIZE; j++) {
-                    if (!gBoard[i][j].isShown && gBoard[i][j].isMine) {
-                        gBoard[i][j].isShown = true;
-                        // elCell.innerText = showCell(gBoard[i][j]);
-                        renderBoard(gBoard);
+    if (gGame.isOn) {
+        if (!isClick) {
+            isClick = true;
+            buildFinalBoard(gBoard, i, j);
+        }
+        if (!gBoard[i][j].isShown && !gBoard[i][j].isMarked) {
+            gBoard[i][j].isShown = true;
+            elCell.innerText = showCell(gBoard[i][j]);
+            elCell.style.backgroundColor = 'lightslategrey';
+            gGame.shownCount++;
+            if (gBoard[i][j].isMine) {
+                for (var i = 0; i < gLevel.SIZE; i++) {
+                    for (var j = 0; j < gLevel.SIZE; j++) {
+                        if (!gBoard[i][j].isShown && gBoard[i][j].isMine) {
+                            gBoard[i][j].isShown = true;
+                            // elCell.innerText = showCell(gBoard[i][j]);
+                            renderBoard(gBoard);
+                        }
                     }
                 }
-            }
 
-            gameOver();
-            var elSymbol = document.querySelector('.smiley')
-            elSymbol.innerText = LOSE_SMILEY;
-        } else {
-            expandShown(gBoard, elCell, i, j);
-            checkGameOver();
+                gameOver();
+                var elSymbol = document.querySelector('.smiley')
+                elSymbol.innerText = LOSE_SMILEY;
+            } else {
+                expandShown(gBoard, elCell, i, j);
+                checkGameOver();
+            }
         }
     }
 }
@@ -206,8 +215,8 @@ function renderBoard(board) {
         strHTML += `<tr>\n`;
         for (var j = 0; j < board[i].length; j++) {
             var currCell = showCell(board[i][j]);
-            strHTML += `<td` + (board[i][j].isShown && !board[i][j].isMine ? ` class="taken"` : ``) + 
-            ` data-i="${i}" data-j="${j}"
+            strHTML += `<td` + (board[i][j].isShown && !board[i][j].isMine ? ` class="taken"` : ``) +
+                ` data-i="${i}" data-j="${j}"
             onclick="cellClicked(this,${i},${j})"
             oncontextmenu="cellMarked(this)">
                 ${currCell}
