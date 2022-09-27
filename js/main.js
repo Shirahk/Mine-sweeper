@@ -6,6 +6,7 @@ const EMPTY = ' ';
 const HAPPY_SMILEY = '😊';
 const WIN_SMILEY = '😎';
 const LOSE_SMILEY = '😢';
+const LIFE = '🖤';
 
 var cell = {
     minesAroundCount: 0,
@@ -26,7 +27,8 @@ var gGame = {
     isOn: false,
     shownCount: 0,
     markedCount: 0,
-    secsPassed: 0
+    secsPassed: 0,
+    life: 3,
 };
 var isClick = false;
 
@@ -41,16 +43,19 @@ function initGame() {
         }
     }, 1000);
 }
-function setBoard(size, mines) {
+function setBoard(size, mines, life) {
     gLevel.SIZE = size;
     gLevel.MINES = mines;
+    gGame.life = life;
     startGame();
 }
 
 function startGame() {
     gBoard = buildEmptyBoard();
     renderBoard(gBoard);
-
+    renderLife(gGame);
+    /*var ellife = document.querySelector('.life')
+    ellife.innerText = LIFE;*/
     var elSymbol = document.querySelector('.smiley')
     elSymbol.innerText = HAPPY_SMILEY;
 
@@ -79,7 +84,7 @@ function buildFinalBoard(board, cellI, cellJ) {
         var mines = [];
         for (var i = 0; i < gLevel.MINES; i++) {
             var currRandom = getRandomIntInclusive(0, gLevel.SIZE * gLevel.SIZE - 1);
-            while (mines.includes(currRandom) && currRandom !== cellI * gLevel.SIZE + cellJ) {
+            while (mines.includes(currRandom) || currRandom === (cellI * gLevel.SIZE + cellJ)) {
                 currRandom = getRandomIntInclusive(0, gLevel.SIZE * gLevel.SIZE - 1);
             }
             mines.push(currRandom);
@@ -159,19 +164,21 @@ function cellClicked(elCell, i, j) {
             elCell.style.backgroundColor = 'lightslategrey';
             gGame.shownCount++;
             if (gBoard[i][j].isMine) {
-                for (var i = 0; i < gLevel.SIZE; i++) {
-                    for (var j = 0; j < gLevel.SIZE; j++) {
-                        if (!gBoard[i][j].isShown && gBoard[i][j].isMine) {
-                            gBoard[i][j].isShown = true;
-                            // elCell.innerText = showCell(gBoard[i][j]);
-                            renderBoard(gBoard);
+                gGame.life--;
+                if (gGame.life === 0) {
+                    for (var i = 0; i < gLevel.SIZE; i++) {
+                        for (var j = 0; j < gLevel.SIZE; j++) {
+                            if (!gBoard[i][j].isShown && gBoard[i][j].isMine) {
+                                gBoard[i][j].isShown = true;
+                                // elCell.innerText = showCell(gBoard[i][j]);
+                            }
                         }
                     }
+                    renderBoard(gBoard);
+                    gameOver();
+                    var elSymbol = document.querySelector('.smiley')
+                    elSymbol.innerText = LOSE_SMILEY;
                 }
-
-                gameOver();
-                var elSymbol = document.querySelector('.smiley')
-                elSymbol.innerText = LOSE_SMILEY;
             } else {
                 expandShown(gBoard, elCell, i, j);
                 checkGameOver();
@@ -226,4 +233,14 @@ function renderBoard(board) {
     }
     var elBoard = document.querySelector('.board');
     elBoard.innerHTML = strHTML;
+}
+
+function renderLife(game) {
+    var strHTML = '';
+    for (var i = 0; i < game.life; i++) {
+        //strHTML += `<tr>\n`;
+        strHTML += LIFE;
+    }
+    var ellife = document.querySelector('.life');
+    ellife.innerHTML = strHTML;
 }

@@ -45,6 +45,10 @@ td.taken {
     background-color: lightslategrey;
 }
 
+td.taken:hover {
+    background-color: lightslategrey;
+}
+
 .button {
     padding: 10px;
 }
@@ -68,4 +72,8 @@ div button {
     color: white;
     border: solid 5px black;
     margin: auto;
+}
+
+.box.life {
+    border: 0px;
 }
