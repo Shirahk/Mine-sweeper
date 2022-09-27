@@ -29,12 +29,13 @@ var gGame = {
     markedCount: 0,
     secsPassed: 0,
     life: 3,
+    mineCount: 0, 
 };
 var isClick = false;
 
 function initGame() {
     document.addEventListener('contextmenu', event => event.preventDefault());
-    startGame();
+    setBoard(4, 2, 1);
     setInterval(() => {
         if (gGame.isOn && isClick) {
             gGame.secsPassed++;
@@ -64,6 +65,7 @@ function startGame() {
     gGame.markedCount = 0;
     gGame.secsPassed = 0;
     isClick = false;
+    gGame.mineCount = 0;
     var elTime = document.querySelector('.time')
     elTime.innerText = gGame.secsPassed;
 }
@@ -165,6 +167,8 @@ function cellClicked(elCell, i, j) {
             gGame.shownCount++;
             if (gBoard[i][j].isMine) {
                 gGame.life--;
+                gGame.mineCount++;
+                gGame.shownCount++;
                 if (gGame.life === 0) {
                     for (var i = 0; i < gLevel.SIZE; i++) {
                         for (var j = 0; j < gLevel.SIZE; j++) {
@@ -209,7 +213,8 @@ function expandShown(board, elCell, i, j) {
 }
 
 function checkGameOver() {
-    if (gLevel.MINES === gGame.markedCount && gGame.shownCount + gGame.markedCount === gLevel.SIZE * gLevel.SIZE) {
+    console.log (gGame);
+    if (gLevel.MINES === gGame.markedCount + gGame.mineCount && gGame.shownCount + gGame.markedCount === gLevel.SIZE * gLevel.SIZE) {
         gameOver();
         var elSymbol = document.querySelector('.smiley');
         elSymbol.innerText = WIN_SMILEY;
