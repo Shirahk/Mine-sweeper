@@ -214,7 +214,8 @@ function expandShown(board, elCell, i, j) {
 
 function checkGameOver() {
     console.log (gGame);
-    if (gLevel.MINES === gGame.markedCount + gGame.mineCount && gGame.shownCount + gGame.markedCount === gLevel.SIZE * gLevel.SIZE) {
+    if (gGame.shownCount + gGame.markedCount === gLevel.SIZE * gLevel.SIZE) {
+   // if (gLevel.MINES === gGame.markedCount + gGame.mineCount && gGame.shownCount + gGame.markedCount === gLevel.SIZE * gLevel.SIZE) {
         gameOver();
         var elSymbol = document.querySelector('.smiley');
         elSymbol.innerText = WIN_SMILEY;
